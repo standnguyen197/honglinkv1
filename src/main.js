@@ -7,7 +7,7 @@ import router from './router'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import VueSocketio from 'vue-socket.io';
-Vue.use(VueSocketio, 'http://localhost:3000');
+Vue.use(VueSocketio, 'http://j8apps.com');
 Vue.config.productionTip = false
 Vue.use(BootstrapVue)
 import vueHeadful from 'vue-headful';
