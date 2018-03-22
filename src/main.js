@@ -7,7 +7,8 @@ import router from './router'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import VueSocketio from 'vue-socket.io';
-Vue.use(VueSocketio, 'http://honglink.club');
+var base_url = window.location.hostname;
+Vue.use(VueSocketio, base_url);
 Vue.config.productionTip = false
 Vue.use(BootstrapVue)
 import vueHeadful from 'vue-headful';
