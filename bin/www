@@ -1,0 +1,222 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var app = require('../app');
+var debug = require('debug')('mean-app:server');
+var http = require('http');
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '8080');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+// var server = http.createServer(app);
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
+http.listen(port, function() {
+    console.log('Server connected! Port 8080');
+});
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+// ============= AI STAND ===================== //
+const cheerio = require('cheerio')
+var htmlspecialchars = require('htmlspecialchars');
+var request = require('request');
+var randomstring = require("randomstring");
+var Code = require('../models/Code');
+var shortid = require('shortid');
+var mongoose = require('mongoose');
+
+io.on('connection', function(socket) {
+    console.log('A user connected');
+    socket.on('sendMessage', function(mes) {
+        var Str = htmlspecialchars(mes.content);
+        var OneFunc = Str.split(' ')[0];
+        var ValueFunc = Str.split(' ')[1];
+        console.log(`${OneFunc} ----- ${ValueFunc}`)
+         if (OneFunc == 'hd') {
+          mes = {
+              content: `<p>Sử dụng <code style="background: #000;">en</code> để mã hóa rút ngọn link!<br/> Cú pháp <code style="background: #000;">en_link</code>. Ví dụ muốn <en> link Facebook các bạn viết như sau:
+              <code style="background: #000;">en https://facebook.com</code> (nhớ viết cả http:// hoặc https:// nếu web đó có nhé.
+              <p>Sử dụng <code style="background: #000;">de</code> để giải mã link! <br/> Cú pháp <code style="background: #000;">de_mã code</code>. Ví dụ muốn <de> link có mã 12HD các bạn viết như sau:
+              <code style="background: #000;">de 12HD</code> nếu có trong dữ liệu Tokuda sẽ trả về link để đi đến!
+              </p>
+              <p> Rút gọn để tránh FB Chặn link.. Vì 1 cộng đồng <span class="font-voll"> ADAM CHÂN CHÍNH <span> <p>`
+          };
+          socket.emit('replyMessage', {
+              mes
+          });
+      }else if (OneFunc == 'en') {
+            // Mã hóa rút gọn đưa ra ngoài!
+            var url = ValueFunc;
+            request(url, function (error, response, body) 
+              {
+                if (!error && response.statusCode == 200) 
+                {
+                  var $ = cheerio.load(body);
+                  var title = $("title").text();
+                  var rand = randomstring.generate({
+                    length: 4,
+                    charset: 'hex',
+                    capitalization: 'uppercase'
+                  });
+                  mes = {
+                    content: `Code: 💖<code style="background: #000;font-size: 30px;">${rand}</code>💖 - ${title}`
+                  };
+                socket.emit('replyMessage', {
+                    mes
+                });
+
+                  var idShort = shortid.generate();
+                  var dataCode = {
+                    _id: idShort, // Cũng là url rút gọn luôn
+                    title: title,
+                    link: ValueFunc,
+                    code: rand
+                  };
+                  // Lưu DB
+
+                  Code.create(dataCode, function (err, post) {
+                    if (err){
+                      return next(err);
+                    }
+                  });
+                
+                }else{
+                  mes = {
+                    content: `enCode link không thành công! Xin thử link khác!`
+                  };
+                    socket.emit('replyMessage', {
+                        mes
+                    });
+                }
+              });
+              // END REQUEST ENCODE;
+
+          
+        } else if (OneFunc == 'de') {
+          var ValueFuncUpCase = ValueFunc.toUpperCase();
+
+          //Tìm trong cơ sở dữ liệu
+          // Code.findOne({code: ValueFuncUpCase})
+          //   .select({_id: 1, title: 1})
+          //   .lean()
+          //   .exec((error, data) => {
+          //     console.log(data._id)
+          //   })
+          Code.findOne({ code: ValueFuncUpCase }).select({_id: 1, title: 1})
+          .lean()
+          .exec((error, xCode) => {
+            if (error) {
+              return handleError(err);
+            }
+            var xCodeLink = xCode._id;
+            var xCodeTitle = xCode.title;
+            if(xCode == ''){
+              mes = {
+                content: `Xin lỗi Tokuda tôi không tìm thấy code '${ValueFuncUpCase}' này!`
+              };
+              socket.emit('replyMessage', {
+                mes
+            });
+            }else{
+              mes = {
+                content: `<p>Tokuda đây xin gửi lại link:</p>
+                <a href="http://giaolink.site/#/go/${xCodeLink}" target=_blank>http://giaolink.site/#/go/${xCodeLink}</a>
+                <p>💖${xCodeTitle}💖</p> - Hãy ủng hộ Tokuda tôi nhé!`,
+                codeHTML: true
+              };
+              socket.emit('replyMessage', {
+                mes
+            });
+            }
+
+
+          });
+           
+
+        }else{
+          mes = {
+            content: `Không có ${OneFunc} đâu nhé!`
+        };
+        socket.emit('replyMessage', {
+            mes
+        });
+        }
+
+    });
+});
+
+http.on('error', onError);
+http.on('listening', onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+    var port = parseInt(val, 10);
+
+    if (isNaN(port)) {
+        // named pipe
+        return val;
+    }
+
+    if (port >= 0) {
+        // port number
+        return port;
+    }
+
+    return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+    if (error.syscall !== 'listen') {
+        throw error;
+    }
+
+    var bind = typeof port === 'string' ?
+        'Pipe ' + port :
+        'Port ' + port;
+
+    // handle specific listen errors with friendly messages
+    switch (error.code) {
+        case 'EACCES':
+            console.error(bind + ' requires elevated privileges');
+            process.exit(1);
+            break;
+        case 'EADDRINUSE':
+            console.error(bind + ' is already in use');
+            process.exit(1);
+            break;
+        default:
+            throw error;
+    }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+    var addr = http.address();
+    var bind = typeof addr === 'string' ?
+        'pipe ' + addr :
+        'port ' + addr.port;
+    debug('Listening on ' + bind);
+}
