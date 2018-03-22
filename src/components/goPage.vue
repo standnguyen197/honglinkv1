@@ -41,7 +41,7 @@
             <ul style="margin-top:40px">
                     <li v-if="isActive"><img src="@/assets/tokuda.jpg" class="coverImage"/><span class="botMessage">Clink vào đây để tới link : <b-btn @click="goLinkDone(pushLink)" variant ="warning" style="font-weight:700;color:#FFF">TRUY CẬP</b-btn></span></li>
                     <li v-else><img src="@/assets/tokuda.jpg" class="coverImage"/><span class="botMessage">Không tìm thấy link! Do link đã bị xóa hoặc một số lý do nào đó!</li>
-           <li><img src="@/assets/tokuda.jpg" class="coverImage"/><span class="botMessage">💖 Mình đặt Quảng cáo chỉ với mong muốn duy trình Website cho mọi người dùng. Đừng ích kỷ mà chặn Quảng Cáo trang nhé :( Ai có lòng hảo tâm xin hãy click vào AdBlock và bỏ chọn trang này nhé :(( Thank các huynh! 💖</b-btn>
+          <!-- <li><img src="@/assets/tokuda.jpg" class="coverImage"/><span class="botMessage">💖 Mình đặt Quảng cáo chỉ với mong muốn duy trình Website cho mọi người dùng. Đừng ích kỷ mà chặn Quảng Cáo trang nhé :( Ai có lòng hảo tâm xin hãy click vào AdBlock và bỏ chọn trang này nhé :(( Thank các huynh! 💖</b-btn> -->
             </ul>
           </div>
         </div>
