@@ -26,7 +26,7 @@
       </h2>
     <!-- Main chat -->
 
-    <p style="text-align:center;">Gõ <code style="background:#000">hd</code> rồi "GỬI" để xem hướng dẫn nhé các Huynh!</p>
+    <p style="text-align:center;font-size: 20px;">Gõ <code style="background:#000">hd</code> rồi "GỬI" để xem hướng dẫn nhé các Huynh!</p>
 
     <div>
       <b-col sm="12" md="8" offset-md="2">
