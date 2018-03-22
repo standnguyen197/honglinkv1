@@ -30,8 +30,9 @@ app.use(function(req, res, next) {
   next(err);
 });
 // Add headers
-var base_url = global.location.hostname;
+
 app.use(function (req, res, next) {
+  var base_url = req.headers.host;
   // Website you wish to allow to connect
   res.setHeader('Access-Control-Allow-Origin', base_url);
 
