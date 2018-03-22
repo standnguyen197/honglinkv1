@@ -46,7 +46,7 @@
         style="border-color: #fbc524;border-radius:0px;
         box-shadow:none;
         box-shadow: none;
-        border-bottom-left-radius: 20px;" placeholder="Nhập nội dung"></b-form-input>
+        border-bottom-left-radius: 20px;" @keyup.enter.prevent="sendMessage(contentMessage)" placeholder="Nhập nội dung"></b-form-input>
                 <b-input-group-append>
                   <b-btn size="lg"   @click="sendMessage(contentMessage)" variant="warning" 
                   style="box-shadow:none;border-radius:0px;color:#FFF;

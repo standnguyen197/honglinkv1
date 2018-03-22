@@ -47,7 +47,7 @@ io.on('connection', function(socket) {
         console.log(`${OneFunc} ----- ${ValueFunc}`)
          if (OneFunc == 'hd') {
           mes = {
-              content: `<p>Sử dụng <code style="background: #000;">en</code> để mã hóa rút ngọn link!<br/> Cú pháp <code style="background: #000;">en_link</code>. Ví dụ muốn <en> link Facebook các bạn viết như sau:
+              content: `<p>Sử dụng <code style="background: #000;">en</code> để mã hóa rút ngọn link!<br/> Cú pháp <code style="background: #000;">en_link</code>. Ví dụ muốn <en>(mã hóa) link Facebook các bạn viết như sau:
               <code style="background: #000;">en https://facebook.com</code> (nhớ viết cả http:// hoặc https:// nếu web đó có nhé.
               <p>Sử dụng <code style="background: #000;">de</code> để giải mã link! <br/> Cú pháp <code style="background: #000;">de_mã code</code>. Ví dụ muốn <de> link có mã 12HD các bạn viết như sau:
               <code style="background: #000;">de 12HD</code> nếu có trong dữ liệu Tokuda sẽ trả về link để đi đến!
