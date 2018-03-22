@@ -77,8 +77,9 @@ export default {
   },
   created(){
       var _this = this;
+      console.log(`${this.$route.params.id}`);
       var base_url = window.location.hostname;
-    axios.get(`${base_url}/getLink/${this.$route.params.id}`)
+    axios.get(`http://honglink.club/getLink/${this.$route.params.id}`)
     .then(response => {
       _this.getLink = response.data;
       if(_this.getLink.statusCode == true){
